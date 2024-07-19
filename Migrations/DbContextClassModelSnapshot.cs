@@ -22,22 +22,19 @@ namespace DotnetBot.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DotnetBot.Attendance", b =>
+            modelBuilder.Entity("CampaignUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("CampaignsId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CampaignId")
+                    b.Property<int>("UsersId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("CampaignsId", "UsersId");
 
-                    b.HasIndex("CampaignId");
+                    b.HasIndex("UsersId");
 
-                    b.ToTable("Attendances");
+                    b.ToTable("CampaignUser");
                 });
 
             modelBuilder.Entity("DotnetBot.Campaign", b =>
@@ -71,41 +68,28 @@ namespace DotnetBot.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AttendanceId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttendanceId");
-
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DotnetBot.Attendance", b =>
+            modelBuilder.Entity("CampaignUser", b =>
                 {
-                    b.HasOne("DotnetBot.Campaign", "Campaign")
+                    b.HasOne("DotnetBot.Campaign", null)
                         .WithMany()
-                        .HasForeignKey("CampaignId")
+                        .HasForeignKey("CampaignsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Campaign");
-                });
-
-            modelBuilder.Entity("DotnetBot.User", b =>
-                {
-                    b.HasOne("DotnetBot.Attendance", null)
-                        .WithMany("Users")
-                        .HasForeignKey("AttendanceId");
-                });
-
-            modelBuilder.Entity("DotnetBot.Attendance", b =>
-                {
-                    b.Navigation("Users");
+                    b.HasOne("DotnetBot.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

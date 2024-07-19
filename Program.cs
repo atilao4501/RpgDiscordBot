@@ -12,12 +12,14 @@ public class Program
         //bot.StartBotAsync().GetAwaiter().GetResult();
         //new DiscordBot().StartBotAsync().GetAwaiter().GetResult();
 
-        User user = new User()
-        {
-            Username = "cleyton",
+        // User user = new User()
+        // {
+        //     Username = "cleyton",
 
-        };
+        // };
 
-        UserService.Register(user);
+        // UserService.Register(user);
+
+        User user 
     }
 }

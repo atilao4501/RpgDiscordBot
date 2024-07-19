@@ -24,12 +24,9 @@ public class DbContextClass : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
-        .HasKey(u => u.Id);
+        .HasMany(e => e.Campaigns)
+        .WithMany(e => e.Users);
 
-        modelBuilder.Entity<Campaign>()
-        .HasKey(u => u.Id);
-
-       
     }
 
 

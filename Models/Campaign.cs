@@ -8,6 +8,6 @@ public class Campaign
 
     public DayOfWeek WeekDay { get; set; }
 
-    public List<User> Users { get; set; } = new List<User>();
+    public List<User> Users = new List<User>();
 
 }

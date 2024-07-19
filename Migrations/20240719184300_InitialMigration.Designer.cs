@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotnetBot.Migrations
 {
     [DbContext(typeof(DbContextClass))]
-    [Migration("20240714043656_InitialMigration")]
+    [Migration("20240719184300_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -25,17 +25,19 @@ namespace DotnetBot.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DotnetBot.Attendance", b =>
+            modelBuilder.Entity("CampaignUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("CampaignsId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<int>("UsersId")
+                        .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("CampaignsId", "UsersId");
 
-                    b.ToTable("Attendances");
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("CampaignUser");
                 });
 
             modelBuilder.Entity("DotnetBot.Campaign", b =>
@@ -46,9 +48,6 @@ namespace DotnetBot.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AttendanceId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("HourReserved")
                         .HasColumnType("timestamp with time zone");
 
@@ -56,12 +55,10 @@ namespace DotnetBot.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("dayOfWeek")
+                    b.Property<int>("WeekDay")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AttendanceId");
 
                     b.ToTable("Campaigns");
                 });
@@ -74,39 +71,28 @@ namespace DotnetBot.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AttendanceId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttendanceId");
-
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DotnetBot.Campaign", b =>
+            modelBuilder.Entity("CampaignUser", b =>
                 {
-                    b.HasOne("DotnetBot.Attendance", null)
-                        .WithMany("Campaigns")
-                        .HasForeignKey("AttendanceId");
-                });
+                    b.HasOne("DotnetBot.Campaign", null)
+                        .WithMany()
+                        .HasForeignKey("CampaignsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("DotnetBot.User", b =>
-                {
-                    b.HasOne("DotnetBot.Attendance", null)
-                        .WithMany("Users")
-                        .HasForeignKey("AttendanceId");
-                });
-
-            modelBuilder.Entity("DotnetBot.Attendance", b =>
-                {
-                    b.Navigation("Campaigns");
-
-                    b.Navigation("Users");
+                    b.HasOne("DotnetBot.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
